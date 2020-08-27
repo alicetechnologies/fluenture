@@ -42,8 +42,8 @@ import {
 } from 'fluture/index.js';
 
 function check(name, context) {
-  if (!isFuture (context)) {
-    throw new TypeError (
+  if (!isFuture(context)) {
+    throw new TypeError(
       'Fluenture#' + name + '() was invoked outside the context of a Future.'
     );
   }
@@ -55,34 +55,34 @@ function identity(x) {
 
 function nullaryDispatcher(wrap, f) {
   return function nullaryFluentureMethod() {
-    check (f.name, this);
-    return wrap (f (this));
+    check(f.name, this);
+    return wrap(f(this));
   };
 }
 
 function unaryDispatcher(wrap, f) {
   return function unaryFluentureMethod(x) {
-    check (f.name, this);
-    return wrap (f (x) (this));
+    check(f.name, this);
+    return wrap(f(x)(this));
   };
 }
 
 function binaryDispatcher(wrap, f) {
   return function binaryFluentureMethod(x, y) {
-    check (f.name, this);
-    return wrap (f (x) (y) (this));
+    check(f.name, this);
+    return wrap(f(x)(y)(this));
   };
 }
 
 function ternaryDispatcher(wrap, f) {
   return function ternaryFluentureMethod(x, y, z) {
-    check (f.name, this);
-    return wrap (f (x) (y) (z) (this));
+    check(f.name, this);
+    return wrap(f(x)(y)(z)(this));
   };
 }
 
 function isFluent(m) {
-  return isFuture (m) && m.name === 'fluent';
+  return isFuture(m) && m.name === 'fluent';
 }
 
 //. ## API
@@ -98,12 +98,12 @@ function isFluent(m) {
 //.
 //. This function is idempotent.
 export function fluent(m) {
-  if (!isFuture (m)) {
-    throw new TypeError (
+  if (!isFuture(m)) {
+    throw new TypeError(
       'fluent() expects its first argument to be a valid Future.'
     );
   }
-  return isFluent (m) ? m : new Fluenture (m);
+  return isFluent(m) ? m : new Fluenture(m);
 }
 
 //# functional :: Future a b -> Future a b
@@ -112,23 +112,23 @@ export function fluent(m) {
 //.
 //. This function is idempotent.
 export function functional(m) {
-  if (!isFuture (m)) {
-    throw new TypeError (
+  if (!isFuture(m)) {
+    throw new TypeError(
       'functional() expects its first argument to be a valid Future.'
     );
   }
-  return isFluent (m) ? m.functional : m;
+  return isFluent(m) ? m.functional : m;
 }
 
 export function Fluenture(functional) {
   this.functional = functional;
 }
 
-Fluenture.prototype = Object.create (Future.prototype);
+// Fluenture.prototype = Object.create (Future.prototype);
 Fluenture.prototype.arity = 1;
 Fluenture.prototype.name = 'fluent';
 Fluenture.prototype._interpret = function Fluenture$interpret(rec, rej, res) {
-  return this.functional._interpret (rec, rej, res);
+  return this.functional._interpret(rec, rej, res);
 };
 
 //# pipe :: (Future a b -> c) -> c
@@ -140,114 +140,114 @@ Fluenture.prototype._interpret = function Fluenture$interpret(rec, rej, res) {
 //.
 //. Fluent [`pipe`](https://github.com/fluture-js/Fluture#pipe).
 Fluenture.prototype.pipe = function pipe(f) {
-  check (pipe.name, this);
-  var x = f (this);
-  return isFuture (x) ? fluent (x) : x;
+  check(pipe.name, this);
+  var x = f(this);
+  return isFuture(x) ? fluent(x) : x;
 };
 
 //# alt :: Fluenture a b ~> Future a b -> Fluenture a b
 //.
 //. Fluent [`alt`](https://github.com/fluture-js/Fluture#alt).
-Fluenture.prototype.alt = unaryDispatcher (fluent, alt);
+Fluenture.prototype.alt = unaryDispatcher(fluent, alt);
 
 //# and :: Fluenture a b ~> Future a b -> Fluenture a b
 //.
 //. Fluent [`and`](https://github.com/fluture-js/Fluture#and).
-Fluenture.prototype.and = unaryDispatcher (fluent, and);
+Fluenture.prototype.and = unaryDispatcher(fluent, and);
 
 //# ap :: Fluenture a b ~> Future a (b -> c) -> Fluenture a c
 //.
 //. Fluent [`ap`](https://github.com/fluture-js/Fluture#ap).
-Fluenture.prototype.ap = unaryDispatcher (fluent, ap);
+Fluenture.prototype.ap = unaryDispatcher(fluent, ap);
 
 //# bichain :: Fluenture a b ~> (a -> Fluenture a c, b -> Fluenture a c) -> Fluenture a c
 //.
 //. Fluent [`bichain`](https://github.com/fluture-js/Fluture#bichain).
-Fluenture.prototype.bichain = binaryDispatcher (fluent, bichain);
+Fluenture.prototype.bichain = binaryDispatcher(fluent, bichain);
 
 //# bimap :: Fluenture a b ~> (a -> c, b -> d) -> Fluenture c d
 //.
 //. Fluent [`bimap`](https://github.com/fluture-js/Fluture#bimap).
-Fluenture.prototype.bimap = binaryDispatcher (fluent, bimap);
+Fluenture.prototype.bimap = binaryDispatcher(fluent, bimap);
 
 //# both :: Fluenture a b ~> Future a c -> Fluenture a (Pair b c)
 //.
 //. Fluent [`both`](https://github.com/fluture-js/Fluture#both).
-Fluenture.prototype.both = unaryDispatcher (fluent, both);
+Fluenture.prototype.both = unaryDispatcher(fluent, both);
 
 //# cache :: Fluenture a b ~> () -> Fluenture a b
 //.
 //. Fluent [`cache`](https://github.com/fluture-js/Fluture#cache).
-Fluenture.prototype.cache = nullaryDispatcher (fluent, cache);
+Fluenture.prototype.cache = nullaryDispatcher(fluent, cache);
 
 //# chain :: Fluenture a b ~> (b -> Fluenture a c) -> Fluenture a c
 //.
 //. Fluent [`chain`](https://github.com/fluture-js/Fluture#chain).
-Fluenture.prototype.chain = unaryDispatcher (fluent, chain);
+Fluenture.prototype.chain = unaryDispatcher(fluent, chain);
 
 //# chainRej :: Fluenture a b ~> (a -> Fluenture c b) -> Fluenture c b
 //.
 //. Fluent [`chainRej`](https://github.com/fluture-js/Fluture#chainRej).
-Fluenture.prototype.chainRej = unaryDispatcher (fluent, chainRej);
+Fluenture.prototype.chainRej = unaryDispatcher(fluent, chainRej);
 
 //# coalesce :: Fluenture a b ~> (a -> c, b -> c) -> Fluenture d c
 //.
 //. Fluent [`coalesce`](https://github.com/fluture-js/Fluture#coalesce).
-Fluenture.prototype.coalesce = binaryDispatcher (fluent, coalesce);
+Fluenture.prototype.coalesce = binaryDispatcher(fluent, coalesce);
 
 //# lastly :: Fluenture a b ~> Future a c -> Fluenture a b
 //.
 //. Fluent [`lastly`](https://github.com/fluture-js/Fluture#lastly).
-Fluenture.prototype.lastly = unaryDispatcher (fluent, lastly);
+Fluenture.prototype.lastly = unaryDispatcher(fluent, lastly);
 
 //# map :: Fluenture a b ~> (b -> c) -> Fluenture a c
 //.
 //. Fluent [`map`](https://github.com/fluture-js/Fluture#map).
-Fluenture.prototype.map = unaryDispatcher (fluent, map);
+Fluenture.prototype.map = unaryDispatcher(fluent, map);
 
 //# mapRej :: Fluenture a b ~> (a -> c) -> Fluenture c b
 //.
 //. Fluent [`mapRej`](https://github.com/fluture-js/Fluture#mapRej).
-Fluenture.prototype.mapRej = unaryDispatcher (fluent, mapRej);
+Fluenture.prototype.mapRej = unaryDispatcher(fluent, mapRej);
 
 //# pap :: Fluenture a b ~> Fluenture a (b -> c) -> Fluenture a c
 //.
 //. Fluent [`pap`](https://github.com/fluture-js/Fluture/#pap).
-Fluenture.prototype.pap = unaryDispatcher (fluent, pap);
+Fluenture.prototype.pap = unaryDispatcher(fluent, pap);
 
 //# race :: Fluenture a b ~> Future a b -> Fluenture a b
 //.
 //. Fluent [`race`](https://github.com/fluture-js/Fluture#race).
-Fluenture.prototype.race = unaryDispatcher (fluent, race);
+Fluenture.prototype.race = unaryDispatcher(fluent, race);
 
 //# swap :: Fluenture a b ~> () -> Fluenture b a
 //.
 //. Fluent [`swap`](https://github.com/fluture-js/Fluture#swap).
-Fluenture.prototype.swap = nullaryDispatcher (fluent, swap);
+Fluenture.prototype.swap = nullaryDispatcher(fluent, swap);
 
 //# done :: Fluenture a b ~> (b -> c) -> Cancel
 //.
 //. Fluent [`done`](https://github.com/fluture-js/Fluture#done).
-Fluenture.prototype.done = unaryDispatcher (identity, done);
+Fluenture.prototype.done = unaryDispatcher(identity, done);
 
 //# fork :: Fluenture a b ~> (a -> c, b -> d) -> Cancel
 //.
 //. Fluent [`fork`](https://github.com/fluture-js/Fluture#fork).
-Fluenture.prototype.fork = binaryDispatcher (identity, fork);
+Fluenture.prototype.fork = binaryDispatcher(identity, fork);
 
 //# forkCatch :: Fluenture a b ~> (Error -> c, a -> d, b -> e) -> Cancel
 //.
 //. Fluent [`forkCatch`](https://github.com/fluture-js/Fluture#forkCatch).
-Fluenture.prototype.forkCatch = ternaryDispatcher (identity, forkCatch);
+Fluenture.prototype.forkCatch = ternaryDispatcher(identity, forkCatch);
 
 //# promise :: Fluenture Error a ~> () -> Promise Error a
 //.
 //. Fluent [`promise`](https://github.com/fluture-js/Fluture#promise).
-Fluenture.prototype.promise = nullaryDispatcher (identity, promise);
+Fluenture.prototype.promise = nullaryDispatcher(identity, promise);
 
 //# value :: Fluenture a b ~> ((Nullable a, b) -> c) -> Cancel
 //.
 //. Fluent [`value`](https://github.com/fluture-js/Fluture#value).
-Fluenture.prototype.value = unaryDispatcher (identity, value);
+Fluenture.prototype.value = unaryDispatcher(identity, value);
 
 //. [Fluture]: https://github.com/fluture-js/Fluture
