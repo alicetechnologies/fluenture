@@ -130,7 +130,7 @@ module.exports = {
   functional
 };
 
-// Fluenture.prototype = Object.create (Future.prototype);
+Fluenture.prototype = Object.create(Future.prototype);
 Fluenture.prototype.arity = 1;
 Fluenture.prototype.name = 'fluent';
 Fluenture.prototype._interpret = function Fluenture$interpret(rec, rej, res) {
@@ -155,6 +155,7 @@ Fluenture.prototype.pipe = function pipe(f) {
 //.
 //. Fluent [`alt`](https://github.com/fluture-js/Fluture#alt).
 Fluenture.prototype.alt = unaryDispatcher(fluent, alt);
+Fluenture.prototype['fantasy-land/alt'] = unaryDispatcher(fluent, alt);
 
 //# and :: Fluenture a b ~> Future a b -> Fluenture a b
 //.
@@ -165,6 +166,7 @@ Fluenture.prototype.and = unaryDispatcher(fluent, and);
 //.
 //. Fluent [`ap`](https://github.com/fluture-js/Fluture#ap).
 Fluenture.prototype.ap = unaryDispatcher(fluent, ap);
+Fluenture.prototype['fantasy-land/ap'] = unaryDispatcher(fluent, ap);
 
 //# bichain :: Fluenture a b ~> (a -> Fluenture a c, b -> Fluenture a c) -> Fluenture a c
 //.
@@ -175,6 +177,7 @@ Fluenture.prototype.bichain = binaryDispatcher(fluent, bichain);
 //.
 //. Fluent [`bimap`](https://github.com/fluture-js/Fluture#bimap).
 Fluenture.prototype.bimap = binaryDispatcher(fluent, bimap);
+Fluenture.prototype['fantasy-land/bimap'] = binaryDispatcher(fluent, bimap);
 
 //# both :: Fluenture a b ~> Future a c -> Fluenture a (Pair b c)
 //.
@@ -190,6 +193,7 @@ Fluenture.prototype.cache = nullaryDispatcher(fluent, cache);
 //.
 //. Fluent [`chain`](https://github.com/fluture-js/Fluture#chain).
 Fluenture.prototype.chain = unaryDispatcher(fluent, chain);
+Fluenture.prototype['fantasy-land/chain'] = unaryDispatcher(fluent, chain);
 
 //# chainRej :: Fluenture a b ~> (a -> Fluenture c b) -> Fluenture c b
 //.
@@ -210,6 +214,7 @@ Fluenture.prototype.lastly = unaryDispatcher(fluent, lastly);
 //.
 //. Fluent [`map`](https://github.com/fluture-js/Fluture#map).
 Fluenture.prototype.map = unaryDispatcher(fluent, map);
+Fluenture.prototype['fantasy-land/map'] = unaryDispatcher(fluent, map);
 
 //# mapRej :: Fluenture a b ~> (a -> c) -> Fluenture c b
 //.
