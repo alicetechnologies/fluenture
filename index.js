@@ -39,7 +39,7 @@ const {
   race,
   swap,
   value
-} = require('fluture/index.js');
+} = require('fluture');
 
 function check(name, context) {
   if (!isFuture(context)) {
@@ -97,32 +97,38 @@ function isFluent(m) {
 //. Enhance a Future with the fluent method API.
 //.
 //. This function is idempotent.
-module.exports.fluent = function fluent(m) {
+function fluent(m) {
   if (!isFuture(m)) {
     throw new TypeError(
       'fluent() expects its first argument to be a valid Future.'
     );
   }
   return isFluent(m) ? m : new Fluenture(m);
-}
+};
 
 //# functional :: Future a b -> Future a b
 //.
 //. Strip a fluent Future (or "Fluenture") from its method API.
 //.
 //. This function is idempotent.
-module.exports.functional = function functional(m) {
+function functional(m) {
   if (!isFuture(m)) {
     throw new TypeError(
       'functional() expects its first argument to be a valid Future.'
     );
   }
   return isFluent(m) ? m.functional : m;
-}
+};
 
-module.exports.Fluenture = function Fluenture(functional) {
+const Fluenture = function Fluenture(functional) {
   this.functional = functional;
-}
+};
+
+module.exports = {
+  fluent,
+  Fluenture,
+  functional
+};
 
 // Fluenture.prototype = Object.create (Future.prototype);
 Fluenture.prototype.arity = 1;
