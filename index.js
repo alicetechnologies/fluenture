@@ -15,7 +15,7 @@
 //. .fork (console.error, console.log)
 //. ```
 
-import {
+const {
   Future,
   alt,
   and,
@@ -39,7 +39,7 @@ import {
   race,
   swap,
   value
-} from 'fluture/index.js';
+} = require('fluture/index.js');
 
 function check(name, context) {
   if (!isFuture(context)) {
@@ -97,7 +97,7 @@ function isFluent(m) {
 //. Enhance a Future with the fluent method API.
 //.
 //. This function is idempotent.
-export function fluent(m) {
+module.exports.fluent = function fluent(m) {
   if (!isFuture(m)) {
     throw new TypeError(
       'fluent() expects its first argument to be a valid Future.'
@@ -111,7 +111,7 @@ export function fluent(m) {
 //. Strip a fluent Future (or "Fluenture") from its method API.
 //.
 //. This function is idempotent.
-export function functional(m) {
+module.exports.functional = function functional(m) {
   if (!isFuture(m)) {
     throw new TypeError(
       'functional() expects its first argument to be a valid Future.'
@@ -120,7 +120,7 @@ export function functional(m) {
   return isFluent(m) ? m.functional : m;
 }
 
-export function Fluenture(functional) {
+module.exports.Fluenture = function Fluenture(functional) {
   this.functional = functional;
 }
 
